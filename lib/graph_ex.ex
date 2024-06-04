@@ -41,6 +41,10 @@ defmodule Graph.Ex do
 
 
   # for quick testing
-  def test_graph, do: Graph.new(type: :undirected) |> Graph.add_vertices([1,2,3,4,5,6]) |> Graph.add_edges([{1,2}, {1,3}, {2,3}, {2,4}, {3,5}, {4,5}, {4,6}])
+  def test_graph, do: g_b()
+
+  def g_a, do: Graph.new(type: :undirected) |> Graph.add_vertices([1,2,3,4,5,6]) |> Graph.add_edges([{1,2}, {1,3}, {2,3}, {2,4}, {2,5}, {2,6}])
+  def g_b, do: Graph.new(type: :undirected) |> Graph.add_vertices([1,2,3,4,5,6]) |> Graph.add_edges([{1,2}, {1,3}, {2,3}, {2,4}, {3,5}, {4,5}, {4,6}])
+  def g_c, do: Graph.new(type: :undirected) |> Graph.add_vertices([1,2,3,4,5]) |> Graph.add_edges([{1,2}, {1,3}, {2,3}, {2,4}, {3,5}, {4,5}])
 
 end

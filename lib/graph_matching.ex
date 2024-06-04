@@ -21,7 +21,9 @@ defmodule Graph.Matching do
     path ->
       matching = Enum.reduce(0..(length(path) - 3) |> Enum.filter(&(rem(&1, 2) == 0)), matching, fn i, matching ->
 
-        matching |> Graph.add_edge(Enum.at(path,i), Enum.at(path,i + 1)) |> Graph.delete_edge(Enum.at(path,i + 1), Enum.at(path,i + 2))
+        matching
+        |> Graph.add_edge(Enum.at(path,i), Enum.at(path,i + 1))
+        |> Graph.delete_edge(Enum.at(path,i + 1), Enum.at(path,i + 2))
       end)
       matching |> Graph.add_edge(Enum.at(path, -2), Enum.at(path, -1))
       maximum(graph, matching)
@@ -36,6 +38,10 @@ defmodule Graph.Matching do
     end
   end
 
+
+  defp blossom_contract() do
+
+  end
 
 
   @doc """
@@ -80,14 +86,14 @@ defmodule Graph.Matching do
           end)
 
           cond do
-            !w_in_forest ->
+            !w_in_forest -> # Add to Forest
               forest =  Map.put(forest, root_of_v, Graph.add_edge(forest[root_of_v], v, w))
               edge_w = Graph.edges(matching, w) |> Enum.at(0)
               forest =  Map.put(forest, root_of_v, Graph.add_edge(forest[root_of_v], edge_w.v1, edge_w.v2))
               {:cont, {acc, forest}}
 
             dist_to_root(forest[root_of_w], w, root_of_w) |> rem(2) == 0 ->
-              if root_of_w != root_of_v do
+              if root_of_w != root_of_v do # Return Aug Path
                 path_in_v = case Graph.get_shortest_path(forest[root_of_v], root_of_v, v) do
                   nil -> [v]
                   path -> path
@@ -97,7 +103,7 @@ defmodule Graph.Matching do
                   path -> path
                 end
                 {:halt, {path_in_v ++ path_in_w, forest}}
-              else # contract the blossom
+              else # Blossom Recursion
                 blossom = Graph.get_shortest_path(forest[root_of_w], v, w)
 
                 {contracted_g, contracted_m} = Enum.reduce(blossom, fn v, {contracted_g, contracted_m} ->
