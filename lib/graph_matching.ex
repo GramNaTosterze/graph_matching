@@ -10,6 +10,29 @@ defmodule Graph.Matching do
   https://stanford.edu/~rezab/classes/cme323/S16/projects_reports/shoemaker_vare.pdf
   """
 
+  @doc """
+  Minimal Maximal Matching 2-Aproximation algorythm
+
+  All it does is return a random maximal matching.
+  """
+  @spec minimal_maximal_matching(Graph.t) :: [Graph.Edge.t]
+  def minimal_maximal_matching(graph), do: maximal(graph)
+
+  @doc """
+  Gready algorytm to give a random maximal matching
+  """
+  @spec maximal(Graph.t) :: [Graph.Edge.t]
+  def maximal(graph) do
+
+    Enum.reduce(Graph.edges(graph), Graph.new(type: :undirected), fn e, match ->
+      if e.v1 not in Graph.vertices(match) and e.v2 not in Graph.vertices(match) and e.v1 != e.v2 do
+        match |> Graph.add_edge(e)
+      else
+        match
+      end
+    end)
+    |> Graph.edges
+  end
 
   @doc """
   Computes a maximum matching of the given graph using Edmond's blossom algorithm
@@ -36,11 +59,6 @@ defmodule Graph.Matching do
       nil -> 0
       path -> length(path)-1
     end
-  end
-
-
-  defp blossom_contract() do
-
   end
 
 
